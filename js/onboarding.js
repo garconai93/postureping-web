@@ -107,6 +107,11 @@ function render() {
     input.style.width = '100%';
     input.style.fontSize = '1rem';
     input.style.padding = '16px 18px';
+    input.style.color = 'var(--text)';
+    input.style.background = 'var(--surface)';
+    input.style.border = '1px solid var(--border)';
+    input.style.caretColor = 'var(--accent)';
+    input.style.fontFamily = 'inherit';
     input.addEventListener('input', e => {
       state.answers[q.key] = e.target.value.trim();
       $('btnNext').disabled = !state.answers[q.key];
