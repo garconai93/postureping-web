@@ -144,6 +144,8 @@ function render() {
 
   $('btnBack').disabled = state.step === 0;
   $('btnNext').textContent = state.step === total - 1 ? 'Termină setup →' : 'Continuă →';
+  $('btnNext').style.opacity = $('btnNext').disabled ? '0.5' : '1';
+  $('btnNext').style.cursor = $('btnNext').disabled ? 'not-allowed' : 'pointer';
 }
 
 $('btnNext').addEventListener('click', () => {
