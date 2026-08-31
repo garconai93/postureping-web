@@ -1,4 +1,4 @@
-const CACHE = 'postureping-v1';
+const CACHE = 'postureping-v3';
 const ASSETS = [
   './',
   './index.html',

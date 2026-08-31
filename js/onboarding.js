@@ -149,6 +149,7 @@ function render() {
 }
 
 $('btnNext').addEventListener('click', () => {
+  console.log('[PosturePing] btnNext clicked, step:', state.step, 'answers:', state.answers);
   if (state.step < QUESTIONS.length - 1) {
     state.step++;
     render();
@@ -160,6 +161,7 @@ $('btnNext').addEventListener('click', () => {
       intensity: state.answers.intensity || 'normal'
     };
     Store.setProfile(profile);
+    console.log('[PosturePing] profile saved:', profile);
 
     const timer = Store.getTimer();
     timer.intervalSec = (state.answers.interval || 25) * 60;
@@ -168,6 +170,7 @@ $('btnNext').addEventListener('click', () => {
     // request notification permission
     Notifier.init().then(() => Notifier.request());
 
+    console.log('[PosturePing] redirecting to app.html');
     window.location.href = './app.html?welcome=1';
   }
 });
