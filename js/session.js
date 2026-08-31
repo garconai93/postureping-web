@@ -15,7 +15,24 @@ const sessionState = {
   startedAt: new Date().toISOString()
 };
 
-const RING_CIRC = 2 * Math.PI * 80; // ~502.65
+const RING_CIRC = 2 * Math.PI * 80;
+
+let character3D = null;
+const phaseTextEl = document.getElementById('phaseText');
+
+// Init 3D character
+function initCharacter() {
+  const canvas = document.getElementById('characterCanvas');
+  if (!canvas || typeof Character3D === 'undefined' || typeof THREE === 'undefined') {
+    // Fallback to SVG
+    return;
+  }
+  try {
+    character3D = Character3D.init(canvas);
+  } catch (e) {
+    console.warn('[Session] 3D init failed:', e);
+  }
+}
 
 function renderCurrent() {
   const ex = program[sessionState.index];
@@ -25,10 +42,8 @@ function renderCurrent() {
   $('exerciseName').textContent = ex.name;
   $('exerciseDesc').textContent = ex.desc;
 
-  fetch(ex.svg)
-    .then(r => r.text())
-    .then(svg => { $('illustration').innerHTML = svg; })
-    .catch(() => { $('illustration').innerHTML = '<div style="text-align:center;font-size:4rem">🧘</div>'; });
+  // Switch 3D character exercise
+  if (character3D) character3D.setExercise(ex.id);
 
   startExerciseTimer(ex);
   renderZoneGrid();
@@ -42,13 +57,30 @@ function startExerciseTimer(ex) {
   $('ringFill').style.strokeDasharray = RING_CIRC;
   $('ringFill').style.strokeDashoffset = '0';
 
-  Timer.start(remaining, {
+  // For breath exercise, sync timer to breathing phase (19s instead of 60s)
+  const totalDuration = ex.id === 'breath' ? 19 : ex.duration;
+
+  Timer.start(totalDuration, {
     onTick: (rem, total) => {
       $('sessionTimer').textContent = rem;
       const progress = (total - rem) / total;
       $('ringFill').style.strokeDashoffset = RING_CIRC * progress;
+
+      // Update phase text for breath
+      if (ex.id === 'breath' && character3D) {
+        const phase = character3D.getPhase();
+        if (phase && phaseTextEl) {
+          phaseTextEl.textContent = phase;
+          phaseTextEl.style.opacity = '1';
+          phaseTextEl.style.color = phase === 'Inspiră' ? '#3ddc97' :
+                                     phase === 'Ține' ? '#ffd166' : '#22c1c3';
+        }
+      }
     },
     onComplete: () => {
+      if (ex.id === 'breath' && phaseTextEl) {
+        phaseTextEl.style.opacity = '0';
+      }
       completeExercise(ex, false);
     }
   });
@@ -71,13 +103,15 @@ function renderZoneGrid() {
     const isDone = sessionState.completed.includes(z);
     const isSkipped = sessionState.skipped.includes(z);
     const cls = isCurrent ? 'current' : isDone ? 'done' : isSkipped ? 'skipped' : '';
-    const label = z === 'neck' ? '🦴' : z === 'shoulders' ? '💪' : z === 'back' ? '🔙' : z === 'eyes' ? '👀' : z === 'wrists' ? '🤚' : '🫁';
+    const label = z === 'neck' ? '🦴' : z === 'shoulders' ? '�' : z === 'back' ? '🔙' : z === 'eyes' ? '👀' : z === 'wrists' ? '🤚' : '🫁';
     return `<div class="cell ${cls}" title="${z}">${label}</div>`;
   }).join('');
 }
 
 function finishSession() {
   Timer.stop();
+  if (phaseTextEl) phaseTextEl.style.opacity = '0';
+
   const session = {
     date: new Date().toISOString().slice(0, 10),
     timestamp: new Date().toISOString(),
@@ -92,12 +126,9 @@ function finishSession() {
     Notifier.fire('✅ Pauză completă!', `${session.completed.length} exerciții, ${session.totalSec}s. Corpul tău îți mulțumește.`);
     Notifier.beep();
 
-    // Check achievements
     const stats = Store.getStats();
     const newly = Achievements.checkAfter(stats);
-    if (newly.length > 0) {
-      // Achievements-ul deja afișează toast + confetti
-    }
+    if (newly.length > 0) { /* toast handled by Achievements */ }
   }
 
   setTimeout(() => {
@@ -120,4 +151,5 @@ if (params.get('auto') === '1') {
   Notifier.vibrate([200, 100, 200]);
 }
 
+initCharacter();
 renderCurrent();
