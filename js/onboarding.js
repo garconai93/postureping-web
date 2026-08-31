@@ -146,6 +146,15 @@ function render() {
   $('btnNext').textContent = state.step === total - 1 ? 'Termină setup →' : 'Continuă →';
   $('btnNext').style.opacity = $('btnNext').disabled ? '0.5' : '1';
   $('btnNext').style.cursor = $('btnNext').disabled ? 'not-allowed' : 'pointer';
+
+  // Show keyboard hint
+  if (!document.getElementById('kbdHint')) {
+    const hint = document.createElement('div');
+    hint.id = 'kbdHint';
+    hint.style.cssText = 'text-align:center;font-size:.78rem;color:var(--text-mute);margin-top:18px;opacity:.7';
+    hint.innerHTML = '�️ <strong>Enter</strong> continuă · <strong>1-9</strong> răspuns rapid · <strong>Shift+←</strong> înapoi';
+    $('btnNext').parentElement.parentElement.appendChild(hint);
+  }
 }
 
 $('btnNext').addEventListener('click', () => {
@@ -179,6 +188,26 @@ $('btnBack').addEventListener('click', () => {
   if (state.step > 0) {
     state.step--;
     render();
+    // Re-validate btnNext based on existing answer
+    const q = QUESTIONS[state.step];
+    if (state.answers[q.key]) $('btnNext').disabled = false;
+  }
+});
+
+// Keyboard: Enter = next, Shift+Enter = back
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT') return; // input has its own handling
+  if (e.key === 'Enter') { e.preventDefault(); $('btnNext').click(); }
+  if (e.key === 'Backspace' || (e.shiftKey && e.key === 'ArrowLeft')) {
+    e.preventDefault(); $('btnBack').click();
+  }
+  if (/^[1-9]$/.test(e.key) && QUESTIONS[state.step].options) {
+    const idx = parseInt(e.key) - 1;
+    const opt = QUESTIONS[state.step].options[idx];
+    if (opt) {
+      const opts = document.querySelectorAll('.option');
+      if (opts[idx]) opts[idx].click();
+    }
   }
 });
 

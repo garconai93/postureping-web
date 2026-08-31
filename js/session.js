@@ -1,7 +1,10 @@
 renderNav('app');
 
 const profile = Store.getProfile();
-if (!profile) { window.location.href = './onboarding.html'; }
+if (!profile) {
+  window.location.replace('./onboarding.html');
+  throw new Error('No profile, redirecting');
+}
 
 const program = buildProgram(profile);
 const sessionState = {
@@ -88,6 +91,13 @@ function finishSession() {
     Store.saveSession(session);
     Notifier.fire('✅ Pauză completă!', `${session.completed.length} exerciții, ${session.totalSec}s. Corpul tău îți mulțumește.`);
     Notifier.beep();
+
+    // Check achievements
+    const stats = Store.getStats();
+    const newly = Achievements.checkAfter(stats);
+    if (newly.length > 0) {
+      // Achievements-ul deja afișează toast + confetti
+    }
   }
 
   setTimeout(() => {

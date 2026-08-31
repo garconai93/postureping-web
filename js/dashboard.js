@@ -2,7 +2,8 @@ renderNav('app');
 
 const profile = Store.getProfile();
 if (!profile) {
-  window.location.href = './onboarding.html';
+  window.location.replace('./onboarding.html');
+  throw new Error('No profile, redirecting');
 }
 
 const stats = Store.getStats();
@@ -43,6 +44,14 @@ function renderHeatmap() {
   });
 }
 renderHeatmap();
+
+// Achievements
+function renderAchievements() {
+  const unlocked = Achievements.get();
+  $('achCount').textContent = `${unlocked.length}/${ACHIEVEMENTS.length}`;
+  Achievements.renderList($('achievementsList'));
+}
+renderAchievements();
 
 // Program personalizat
 function renderProgram() {
@@ -130,6 +139,15 @@ $('btnSkip').addEventListener('click', () => {
   toast('⏭ Pauza sărită.');
 });
 
+$('btnTestBreak').addEventListener('click', async () => {
+  await Notifier.init();
+  await Notifier.request();
+  Notifier.fire('� PosturePing — Pauză de test!', 'Așa va suna și vibra când e timpul.');
+  Notifier.beep();
+  Notifier.vibrate([200, 100, 200]);
+  toast('🔔 Test trimis! Verifică notificările.');
+});
+
 // Start break button → goes to session
 $('btnStartBreak').addEventListener('click', () => {
   window.location.href = './session.html';
@@ -149,9 +167,10 @@ $('btnSettings').addEventListener('click', async () => {
   $('notifStatus').textContent = `Status: ${Notifier.permission}`;
   const cfg = Store.getTimer();
   $('intervalSelect').value = String(cfg.intervalSec);
-  $('soundToggle').checked = cfg.soundOn;
-  $('soundKnob').style.left = cfg.soundOn ? '25px' : '3px';
-  $('soundKnob').style.background = cfg.soundOn ? 'var(--accent)' : 'var(--text-mute)';
+  const knob = $('btnSoundToggle').querySelector('.toggle-knob');
+  knob.style.left = cfg.soundOn ? '25px' : '3px';
+  knob.style.background = cfg.soundOn ? 'var(--accent)' : 'var(--text-mute)';
+  $('btnSoundToggle').setAttribute('aria-pressed', cfg.soundOn);
 });
 
 $('closeSettings').addEventListener('click', () => $('settingsModal').classList.remove('show'));
@@ -175,19 +194,16 @@ $('btnEnableNotif').addEventListener('click', async () => {
   toast(ok ? '✓ Notificări activate' : '✗ Notificări refuzate');
 });
 
-$('soundToggle').addEventListener('change', e => {
+$('btnSoundToggle').addEventListener('click', () => {
   const cfg = Store.getTimer();
-  cfg.soundOn = e.target.checked;
+  cfg.soundOn = !cfg.soundOn;
   Store.setTimer(cfg);
-  $('soundKnob').style.left = cfg.soundOn ? '25px' : '3px';
-  $('soundKnob').style.background = cfg.soundOn ? 'var(--accent)' : 'var(--text-mute)';
+  const knob = $('btnSoundToggle').querySelector('.toggle-knob');
+  knob.style.left = cfg.soundOn ? '25px' : '3px';
+  knob.style.background = cfg.soundOn ? 'var(--accent)' : 'var(--text-mute)';
+  $('btnSoundToggle').setAttribute('aria-pressed', cfg.soundOn);
   if (cfg.soundOn) Notifier.beep();
-});
-
-// Click pe knob
-document.querySelector('label[for="soundToggle"], #soundKnob')?.addEventListener('click', () => {
-  $('soundToggle').checked = !$('soundToggle').checked;
-  $('soundToggle').dispatchEvent(new Event('change'));
+  toast(cfg.soundOn ? '🔊 Sunet activat' : '🔇 Sunet dezactivat');
 });
 
 // Export PDF (HTML-based, fără libs externe)

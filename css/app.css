@@ -284,3 +284,79 @@ button{font-family:inherit;cursor:pointer}
 @media(prefers-reduced-motion:reduce){
   *{animation-duration:.01ms !important;transition-duration:.01ms !important}
 }
+
+/* ACHIEVEMENTS & CELEBRATIONS */
+.achievements-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.achievement{
+  background:var(--surface-2);border:1px solid var(--border);
+  border-radius:12px;padding:10px 14px;
+  display:flex;align-items:center;gap:10px;
+  font-size:.85rem;
+  transition:transform .2s,border-color .2s;
+}
+.achievement:hover{transform:translateY(-2px)}
+.achievement.unlocked{border-color:var(--accent);background:rgba(61,220,151,0.1)}
+.achievement.locked{opacity:.4;filter:grayscale(.8)}
+.achievement-icon{font-size:1.4rem}
+.achievement-name{font-weight:600}
+.achievement-desc{font-size:.78rem;color:var(--text-mute);margin-top:2px}
+
+/* CONFETTI */
+.confetti{
+  position:fixed;top:-10px;width:8px;height:14px;
+  pointer-events:none;z-index:9999;
+  animation:fall linear forwards;
+}
+@keyframes fall{
+  to{transform:translateY(110vh) rotate(720deg);opacity:0}
+}
+
+/* TOGGLE BUTTON (sound) */
+.btn-toggle{
+  background:none;border:none;cursor:pointer;padding:0;
+  display:flex;align-items:center;
+}
+.toggle-track{
+  width:50px;height:28px;border-radius:99px;
+  background:var(--surface-2);
+  position:relative;
+  transition:background .2s;
+}
+.toggle-knob{
+  position:absolute;top:3px;left:3px;
+  width:22px;height:22px;border-radius:50%;
+  background:var(--accent);
+  transition:left .2s,background .2s;
+}
+
+/* BIGGER TOUCH TARGETS for mobile */
+@media(max-width:560px){
+  .btn{padding:14px 18px;font-size:1rem}
+  .timer-display{font-size:4rem}
+  .option{padding:18px 18px;font-size:1rem}
+  .dash-grid{gap:14px}
+}
+
+/* HEATMAP responsive */
+@media(max-width:720px){
+  .heatmap{grid-template-columns:repeat(45,1fr)}
+}
+@media(max-width:480px){
+  .heatmap{grid-template-columns:repeat(30,1fr);gap:2px}
+}
+
+/* ACHIEVEMENT TOAST */
+.milestone-toast{
+  position:fixed;top:80px;left:50%;
+  transform:translateX(-50%) translateY(-200px);
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  color:#062016;
+  padding:16px 24px;border-radius:14px;
+  font-weight:600;font-size:.95rem;
+  box-shadow:0 12px 30px -8px var(--accent-glow);
+  z-index:200;
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+  display:flex;align-items:center;gap:12px;
+  max-width:90vw;
+}
+.milestone-toast.show{transform:translateX(-50%) translateY(0)}

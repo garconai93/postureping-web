@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="PosturePing — micro-coaching pentru desk workers. Pauze ghidate la 25 min pentru gât, umeri, spate, ochi. Funcționează în browser, fără cont.">
+<meta property="og:title" content="PosturePing — Micro-pauze ghidate la fiecare 25 min">
+<meta property="og:description" content="Închide cercul cu durerile de birou. Pauze automate pentru gât, umeri, spate, ochi. 100% privacy-first.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://garconai93.github.io/postureping-web/">
+<meta property="og:image" content="https://garconai93.github.io/postureping-web/assets/icons/icon-512.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="PosturePing — Micro-pauze la 25 min">
+<meta name="twitter:description" content="Închide cercul cu durerile de birou.">
 <title>PosturePing — Micro-pauze ghidate la fiecare 25 min</title>
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#3ddc97">
@@ -127,11 +135,11 @@ footer{padding:50px 0 30px;border-top:1px solid var(--border);margin-top:80px}
       <h1>Închide cercul cu <span class="gradient-text">durerile de birou</span>. O pauză la 25 de minute.</h1>
       <p class="lead">La fiecare 25 de minute, PosturePing îți propune un exercițiu de 60 de secunde pentru gât, umeri, spate sau ochi. Funcționează în orice browser, salvează datele local, nu trimite nimic pe server.</p>
       <div class="hero-cta">
-        <a href="./onboarding.html" class="btn btn-primary">
+        <a href="./onboarding.html" class="btn btn-primary" id="ctaStart">
           <span>🚀</span> Setup 90 sec
         </a>
-        <a href="./app.html" class="btn btn-ghost">
-          <span>📊</span> Deschide dashboard
+        <a href="./app.html" class="btn btn-ghost" id="ctaContinue" style="display:none">
+          <span>📊</span> Continuă la dashboard
         </a>
       </div>
       <div class="hero-trust">
@@ -269,6 +277,11 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js').catch(() => {});
   });
+}
+// Show "Continuă" button if user already has a profile
+if (window.localStorage && localStorage.getItem('pp_profile')) {
+  const btn = document.getElementById('ctaContinue');
+  if (btn) btn.style.display = 'inline-flex';
 }
 </script>
 
