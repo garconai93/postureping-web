@@ -20,19 +20,7 @@ const RING_CIRC = 2 * Math.PI * 80;
 let character3D = null;
 const phaseTextEl = document.getElementById('phaseText');
 
-// Init 3D character
-function initCharacter() {
-  const canvas = document.getElementById('characterCanvas');
-  if (!canvas || typeof Character3D === 'undefined' || typeof THREE === 'undefined') {
-    // Fallback to SVG
-    return;
-  }
-  try {
-    character3D = Character3D.init(canvas);
-  } catch (e) {
-    console.warn('[Session] 3D init failed:', e);
-  }
-}
+// 2D SVG mode - no character init needed
 
 function renderCurrent() {
   const ex = program[sessionState.index];
@@ -42,8 +30,12 @@ function renderCurrent() {
   $('exerciseName').textContent = ex.name;
   $('exerciseDesc').textContent = ex.desc;
 
-  // Switch 3D character exercise
-  if (character3D) character3D.setExercise(ex.id);
+  // Set SVG image (2D illustration)
+  const svgImg = document.getElementById('exerciseSvg');
+  if (svgImg) {
+    svgImg.src = ex.svg;
+    svgImg.alt = ex.name;
+  }
 
   startExerciseTimer(ex);
   renderZoneGrid();
@@ -65,22 +57,8 @@ function startExerciseTimer(ex) {
       $('sessionTimer').textContent = rem;
       const progress = (total - rem) / total;
       $('ringFill').style.strokeDashoffset = RING_CIRC * progress;
-
-      // Update phase text for breath
-      if (ex.id === 'breath' && character3D) {
-        const phase = character3D.getPhase();
-        if (phase && phase.phase && phaseTextEl) {
-          phaseTextEl.textContent = phase.phase;
-          phaseTextEl.style.opacity = '1';
-          const c = phase.color;
-          phaseTextEl.style.color = '#' + c.toString(16).padStart(6, '0');
-        }
-      }
     },
     onComplete: () => {
-      if (ex.id === 'breath' && phaseTextEl) {
-        phaseTextEl.style.opacity = '0';
-      }
       completeExercise(ex, false);
     }
   });
@@ -151,5 +129,4 @@ if (params.get('auto') === '1') {
   Notifier.vibrate([200, 100, 200]);
 }
 
-initCharacter();
 renderCurrent();
