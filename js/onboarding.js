@@ -87,6 +87,12 @@ const state = {
 
 const $ = id => document.getElementById(id);
 
+function updateBtnStyle() {
+  const btn = $('btnNext');
+  btn.style.opacity = btn.disabled ? '0.5' : '1';
+  btn.style.cursor = btn.disabled ? 'not-allowed' : 'pointer';
+}
+
 function render() {
   const q = QUESTIONS[state.step];
   const total = QUESTIONS.length;
@@ -115,9 +121,11 @@ function render() {
     input.addEventListener('input', e => {
       state.answers[q.key] = e.target.value.trim();
       $('btnNext').disabled = !state.answers[q.key];
+      updateBtnStyle();
     });
     optsEl.appendChild(input);
     if (state.answers[q.key]) $('btnNext').disabled = false;
+    updateBtnStyle();
   } else {
     q.options.forEach(opt => {
       const optEl = document.createElement('div');
@@ -145,12 +153,12 @@ function render() {
       optsEl.appendChild(optEl);
     });
     $('btnNext').disabled = !state.answers[q.key] || (q.multi && state.answers[q.key].length === 0);
+    updateBtnStyle();
   }
 
   $('btnBack').disabled = state.step === 0;
   $('btnNext').textContent = state.step === total - 1 ? 'Termină setup →' : 'Continuă →';
-  $('btnNext').style.opacity = $('btnNext').disabled ? '0.5' : '1';
-  $('btnNext').style.cursor = $('btnNext').disabled ? 'not-allowed' : 'pointer';
+  updateBtnStyle();
 
   // Show keyboard hint
   if (!document.getElementById('kbdHint')) {
