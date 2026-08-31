@@ -1,22 +1,61 @@
-<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" aria-label="Întinde spatele">
+<svg viewBox="0 0 320 280" xmlns="http://www.w3.org/2000/svg" aria-label="Exercițiu: întinde spatele">
   <defs>
-    <linearGradient id="back-g" x1="0" y1="0" x2="1" y2="1">
+    <linearGradient id="backG" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="#3ddc97"/>
       <stop offset="100%" stop-color="#22c1c3"/>
     </linearGradient>
+    <radialGradient id="backZone" cx="50%" cy="50%">
+      <stop offset="0%" stop-color="#3ddc97" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#3ddc97" stop-opacity="0"/>
+    </radialGradient>
   </defs>
-  <g transform="translate(120,120)">
-    <g stroke="url(#back-g)" stroke-width="3" fill="none" stroke-linecap="round">
-      <path d="M0,-80 Q-30,-40 -20,0 Q-30,40 0,80">
-        <animateTransform attributeName="transform" type="rotate"
-          values="-8;8;-8" dur="4s" repeatCount="indefinite"/>
-      </path>
-      <path d="M0,-80 Q30,-40 20,0 Q30,40 0,80" opacity="0.3"/>
-      <circle cx="0" cy="-60" r="12" fill="rgba(61,220,151,0.2)" stroke="#3ddc97">
-        <animateTransform attributeName="transform" type="rotate"
-          values="-8;8;-8" dur="4s" repeatCount="indefinite"/>
-      </circle>
-    </g>
-    <text y="100" text-anchor="middle" fill="#8b94a8" font-size="14" font-family="sans-serif">twist ușor</text>
+
+  <!-- Scaun (simplu) -->
+  <rect x="100" y="200" width="120" height="15" rx="3" fill="#1a2138" stroke="url(#backG)" stroke-width="1.5"/>
+  <line x1="115" y1="215" x2="115" y2="240" stroke="url(#backG)" stroke-width="2"/>
+  <line x1="205" y1="215" x2="205" y2="240" stroke="url(#backG)" stroke-width="2"/>
+
+  <!-- Highlight spate -->
+  <ellipse cx="160" cy="140" rx="80" ry="50" fill="url(#backZone)"/>
+
+  <!-- Corp animat (twist stânga-dreapta) -->
+  <g>
+    <animateTransform attributeName="transform" type="rotate"
+      values="-15 160 180; 15 160 180; -15 160 180" dur="5s" repeatCount="indefinite"/>
+
+    <!-- Cap -->
+    <circle cx="160" cy="80" r="26" fill="#1a2138" stroke="url(#backG)" stroke-width="2.5"/>
+    <circle cx="152" cy="78" r="2" fill="#8b94a8"/>
+    <circle cx="168" cy="78" r="2" fill="#8b94a8"/>
+    <!-- Gât -->
+    <rect x="151" y="106" width="18" height="14" rx="3" fill="#1a2138" stroke="url(#backG)" stroke-width="2"/>
+    <!-- Trunchi -->
+    <path d="M125,120 L195,120 L200,195 L120,195 Z" fill="#1a2138" stroke="url(#backG)" stroke-width="2"/>
+    <!-- Braț pe piept (twist vizibil) -->
+    <path d="M130,130 Q150,135 175,135" stroke="url(#backG)" stroke-width="2" fill="none"/>
+  </g>
+
+  <!-- Săgeată twist stânga -->
+  <g transform="translate(50,140)" opacity="0.8">
+    <path d="M0,0 Q-15,-15 -25,0" stroke="#3ddc97" stroke-width="2.5" fill="none" stroke-linecap="round">
+      <animate attributeName="opacity" values="0.3;1;0.3" dur="2.5s" repeatCount="indefinite"/>
+    </path>
+    <path d="M-25,0 L-22,-5 M-25,0 L-19,-5" stroke="#3ddc97" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Săgeată twist dreapta -->
+  <g transform="translate(270,140)" opacity="0.8">
+    <path d="M0,0 Q15,15 25,0" stroke="#3ddc97" stroke-width="2.5" fill="none" stroke-linecap="round">
+      <animate attributeName="opacity" values="1;0.3;1" dur="2.5s" repeatCount="indefinite"/>
+    </path>
+    <path d="M25,0 L22,5 M25,0 L19,5" stroke="#3ddc97" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Count -->
+  <g transform="translate(160,255)">
+    <rect x="-65" y="-13" width="130" height="26" rx="13" fill="rgba(61,220,151,0.15)" stroke="#3ddc97" stroke-width="1.5"/>
+    <text x="0" y="5" text-anchor="middle" fill="#3ddc97" font-size="12" font-weight="600" font-family="sans-serif">
+      3× stânga · 3× dreapta · 5s
+    </text>
   </g>
 </svg>
