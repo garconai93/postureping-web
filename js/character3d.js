@@ -404,11 +404,12 @@
     const h = canvas.clientHeight || 320;
 
     const scene = new THREE.Scene();
-    scene.background = null;
+    scene.background = new THREE.Color(0x141a2e);
+    scene.fog = new THREE.Fog(0x141a2e, 5, 15);
 
-    const camera = new THREE.PerspectiveCamera(30, w / h, 0.1, 100);
-    camera.position.set(0, 0.6, 4.2);
-    camera.lookAt(0, 0.5, 0);
+    const camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 100);
+    camera.position.set(0, 0.4, 3.0);
+    camera.lookAt(0, 0.4, 0);
 
     const renderer = new THREE.WebGLRenderer({
       canvas, alpha: true, antialias: true
@@ -625,9 +626,9 @@
 
       // Camera subtle orbit
       cameraAngle += 0.0003;
-      ctx.camera.position.x = Math.sin(cameraAngle) * 0.4;
-      ctx.camera.position.z = 4.2 + Math.cos(cameraAngle) * 0.1;
-      ctx.camera.lookAt(0, 0.5, 0);
+      ctx.camera.position.x = Math.sin(cameraAngle) * 0.3;
+      ctx.camera.position.z = 3.0 + Math.cos(cameraAngle) * 0.1;
+      ctx.camera.lookAt(0, 0.4, 0);
 
       window.__currentEx = currentExercise;
       const anim = ANIMATIONS[currentExercise];
