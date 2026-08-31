@@ -1,0 +1,22 @@
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" aria-label="Întinde spatele">
+  <defs>
+    <linearGradient id="back-g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#3ddc97"/>
+      <stop offset="100%" stop-color="#22c1c3"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(120,120)">
+    <g stroke="url(#back-g)" stroke-width="3" fill="none" stroke-linecap="round">
+      <path d="M0,-80 Q-30,-40 -20,0 Q-30,40 0,80">
+        <animateTransform attributeName="transform" type="rotate"
+          values="-8;8;-8" dur="4s" repeatCount="indefinite"/>
+      </path>
+      <path d="M0,-80 Q30,-40 20,0 Q30,40 0,80" opacity="0.3"/>
+      <circle cx="0" cy="-60" r="12" fill="rgba(61,220,151,0.2)" stroke="#3ddc97">
+        <animateTransform attributeName="transform" type="rotate"
+          values="-8;8;-8" dur="4s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+    <text y="100" text-anchor="middle" fill="#8b94a8" font-size="14" font-family="sans-serif">twist ușor</text>
+  </g>
+</svg>

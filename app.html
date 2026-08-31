@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard · PosturePing</title>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#3ddc97">
+<link rel="icon" type="image/png" sizes="32x32" href="./assets/icons/favicon-32.png">
+<link rel="stylesheet" href="./css/app.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<main class="dash-wrap">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+    <div>
+      <h1>Salut, <span class="gradient-text" id="userName">prieten</span> 👋</h1>
+      <p style="margin-top:6px">Hai să continuăm. Corpul tău îți mulțumește.</p>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-ghost" id="btnSettings">�️ Setări</button>
+      <button class="btn btn-primary" id="btnStartBreak">▶ Start pauză</button>
+    </div>
+  </div>
+
+  <div class="dash-grid">
+    <div class="card stat-card">
+      <div class="stat-label">🔥 Streak</div>
+      <div class="stat-value" id="streak">0</div>
+      <div class="stat-sub">zile consecutive</div>
+    </div>
+    <div class="card stat-card">
+      <div class="stat-label">⏱ Timp salvat</div>
+      <div class="stat-value" id="minutes">0</div>
+      <div class="stat-sub">minute în pauze active</div>
+    </div>
+    <div class="card stat-card">
+      <div class="stat-label">📊 Pauze totale</div>
+      <div class="stat-value" id="breaks">0</div>
+      <div class="stat-sub">micro-pauze făcute</div>
+    </div>
+    <div class="card stat-card">
+      <div class="stat-label">🎯 Azi</div>
+      <div class="stat-value" id="todayBreaks">0</div>
+      <div class="stat-sub">pauze în ziua de azi</div>
+    </div>
+
+    <div class="card big-card">
+      <h3>⏲ Timer pauză</h3>
+      <div class="timer-display" id="timerDisplay">25:00</div>
+      <div class="timer-state" id="timerState">Următoarea pauză în 25:00</div>
+      <div class="timer-actions">
+        <button class="btn btn-primary" id="btnToggleTimer">Pauză</button>
+        <button class="btn btn-ghost" id="btnSkip">Skip pauza</button>
+      </div>
+      <div class="zone-pills" id="todayZones"></div>
+    </div>
+
+    <div class="card big-card">
+      <h3>🎯 Program personalizat</h3>
+      <p style="margin-bottom:14px;font-size:.92rem">Pe baza profilului tău. Se ajustează în funcție de ce faci azi.</p>
+      <div id="programList"></div>
+    </div>
+
+    <div class="card heatmap-card">
+      <h3>📈 Activitate · ultimele 90 zile</h3>
+      <p style="font-size:.92rem;margin-top:4px">Fiecare pătrat = o zi. Cu cât e mai verde, cu atât ai făcut mai multe pauze.</p>
+      <div class="heatmap" id="heatmap"></div>
+      <div class="heatmap-legend">
+        <span>Mai puțin</span>
+        <div class="scale">
+          <div class="cell" style="background:var(--surface-2)"></div>
+          <div class="cell" style="background:rgba(61,220,151,0.2)"></div>
+          <div class="cell" style="background:rgba(61,220,151,0.5)"></div>
+          <div class="cell" style="background:rgba(61,220,151,0.8)"></div>
+          <div class="cell" style="background:var(--accent)"></div>
+        </div>
+        <span>Mai mult</span>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal">
+    <button class="modal-close" id="closeSettings">×</button>
+    <h2>Setări</h2>
+    <p style="margin-bottom:24px">Ajustează cum funcționează PosturePing pentru tine.</p>
+
+    <div style="margin-bottom:18px">
+      <label style="display:block;margin-bottom:8px;font-weight:600">Interval pauză</label>
+      <select id="intervalSelect" class="option" style="width:100%;background:var(--surface);color:var(--text);border:1px solid var(--border)">
+        <option value="1200">20 minute (intensiv)</option>
+        <option value="1500">25 minute (recomandat)</option>
+        <option value="1800">30 minute (lejer)</option>
+        <option value="2700">45 minute (deep work)</option>
+      </select>
+    </div>
+
+    <div style="margin-bottom:18px;display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div style="font-weight:600">🔔 Notificări browser</div>
+        <small style="color:var(--text-mute)" id="notifStatus">Status: verificare...</small>
+      </div>
+      <button class="btn btn-ghost" id="btnEnableNotif">Activează</button>
+    </div>
+
+    <div style="margin-bottom:18px;display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div style="font-weight:600">🔊 Sunet</div>
+        <small style="color:var(--text-mute)">Beep la început de pauză</small>
+      </div>
+      <label class="option-radio" style="width:50px;height:28px;border-radius:99px;border:none;background:var(--surface-2);position:relative;cursor:pointer">
+        <input type="checkbox" id="soundToggle" style="display:none">
+        <span id="soundKnob" style="position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--accent);transition:.2s"></span>
+      </label>
+    </div>
+
+    <hr style="border:none;border-top:1px solid var(--border);margin:20px 0">
+    <h3 style="margin-bottom:12px">📤 Export & Share</h3>
+    <button class="btn btn-ghost btn-block" id="btnExportPDF" style="margin-bottom:10px">📄 Exportă raport PDF (luna aceasta)</button>
+    <button class="btn btn-ghost btn-block" id="btnShare" style="margin-bottom:10px">🔗 Share PosturePing cu un coleg</button>
+    <button class="btn btn-ghost btn-block" id="btnReset" style="color:var(--danger);border-color:var(--danger)">🗑 Resetează toate datele</button>
+  </div>
+</div>
+
+<script src="./js/store.js"></script>
+<script src="./js/exercises.js"></script>
+<script src="./js/notifications.js"></script>
+<script src="./js/timer.js"></script>
+<script src="./js/app.js"></script>
+<script src="./js/dashboard.js"></script>
+</body>
+</html>

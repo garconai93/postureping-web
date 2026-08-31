@@ -1,0 +1,113 @@
+renderNav('app');
+
+const profile = Store.getProfile();
+if (!profile) { window.location.href = './onboarding.html'; }
+
+const program = buildProgram(profile);
+const sessionState = {
+  index: 0,
+  completed: [],
+  skipped: [],
+  totalSec: 0,
+  startedAt: new Date().toISOString()
+};
+
+const RING_CIRC = 2 * Math.PI * 80; // ~502.65
+
+function renderCurrent() {
+  const ex = program[sessionState.index];
+  if (!ex) return finishSession();
+
+  $('stepLabel').textContent = `Exercițiul ${sessionState.index + 1} din ${program.length}`;
+  $('exerciseName').textContent = ex.name;
+  $('exerciseDesc').textContent = ex.desc;
+
+  fetch(ex.svg)
+    .then(r => r.text())
+    .then(svg => { $('illustration').innerHTML = svg; })
+    .catch(() => { $('illustration').innerHTML = '<div style="text-align:center;font-size:4rem">🧘</div>'; });
+
+  startExerciseTimer(ex);
+  renderZoneGrid();
+}
+
+function startExerciseTimer(ex) {
+  Timer.stop();
+  let remaining = ex.duration;
+
+  $('sessionTimer').textContent = remaining;
+  $('ringFill').style.strokeDasharray = RING_CIRC;
+  $('ringFill').style.strokeDashoffset = '0';
+
+  Timer.start(remaining, {
+    onTick: (rem, total) => {
+      $('sessionTimer').textContent = rem;
+      const progress = (total - rem) / total;
+      $('ringFill').style.strokeDashoffset = RING_CIRC * progress;
+    },
+    onComplete: () => {
+      completeExercise(ex, false);
+    }
+  });
+}
+
+function completeExercise(ex, skipped) {
+  if (skipped) sessionState.skipped.push(ex.zone);
+  else { sessionState.completed.push(ex.zone); sessionState.totalSec += ex.duration; }
+
+  sessionState.index++;
+  if (sessionState.index >= program.length) finishSession();
+  else renderCurrent();
+}
+
+function renderZoneGrid() {
+  const el = document.getElementById('zoneGrid');
+  const allZones = ['neck', 'shoulders', 'back', 'eyes', 'wrists', 'breath'];
+  el.innerHTML = allZones.map(z => {
+    const isCurrent = program[sessionState.index]?.zone === z;
+    const isDone = sessionState.completed.includes(z);
+    const isSkipped = sessionState.skipped.includes(z);
+    const cls = isCurrent ? 'current' : isDone ? 'done' : isSkipped ? 'skipped' : '';
+    const label = z === 'neck' ? '🦴' : z === 'shoulders' ? '💪' : z === 'back' ? '🔙' : z === 'eyes' ? '👀' : z === 'wrists' ? '🤚' : '🫁';
+    return `<div class="cell ${cls}" title="${z}">${label}</div>`;
+  }).join('');
+}
+
+function finishSession() {
+  Timer.stop();
+  const session = {
+    date: new Date().toISOString().slice(0, 10),
+    timestamp: new Date().toISOString(),
+    completed: sessionState.completed,
+    skipped: sessionState.skipped,
+    totalSec: sessionState.totalSec,
+    breaks: sessionState.completed.length > 0 ? 1 : 0
+  };
+
+  if (session.completed.length > 0) {
+    Store.saveSession(session);
+    Notifier.fire('✅ Pauză completă!', `${session.completed.length} exerciții, ${session.totalSec}s. Corpul tău îți mulțumește.`);
+    Notifier.beep();
+  }
+
+  setTimeout(() => {
+    window.location.href = './app.html?session=1';
+  }, 800);
+}
+
+$('btnSkip').addEventListener('click', () => {
+  const ex = program[sessionState.index];
+  completeExercise(ex, true);
+});
+
+$('btnDone').addEventListener('click', () => {
+  const ex = program[sessionState.index];
+  completeExercise(ex, false);
+});
+
+const params = new URLSearchParams(location.search);
+if (params.get('auto') === '1') {
+  Notifier.vibrate([200, 100, 200]);
+}
+
+renderCurrent();

@@ -1,0 +1,14 @@
+{
+  "name": "PosturePing — Micro-coaching pentru birou",
+  "short_name": "PosturePing",
+  "description": "Micro-pauze ghidate la fiecare 25 de minute. Pentru gât, umeri, spate, ochi.",
+  "start_url": "./app.html",
+  "display": "standalone",
+  "background_color": "#0a0e1a",
+  "theme_color": "#3ddc97",
+  "orientation": "portrait",
+  "icons": [
+    {"src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+    {"src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+  ]
+}

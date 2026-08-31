@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pauză · PosturePing</title>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#3ddc97">
+<link rel="stylesheet" href="./css/app.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<main class="session-wrap">
+  <div class="session">
+    <div style="margin-bottom:14px"><span class="eyebrow" id="stepLabel">Exercițiul 1 din 4</span></div>
+
+    <div class="session-illustration" id="illustration">
+      <!-- SVG injectat -->
+    </div>
+
+    <div class="exercise-name" id="exerciseName">Loading...</div>
+    <div class="exercise-desc" id="exerciseDesc">...</div>
+
+    <div class="progress-ring">
+      <svg width="180" height="180">
+        <circle cx="90" cy="90" r="80" class="track"/>
+        <circle cx="90" cy="90" r="80" class="fill" id="ringFill"/>
+      </svg>
+      <div style="position:absolute;inset:0;display:grid;place-items:center">
+        <div>
+          <div class="session-timer" id="sessionTimer">60</div>
+          <div style="font-size:.85rem;color:var(--text-mute)">secunde</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <button class="btn btn-ghost" id="btnSkip">⏭ Skip</button>
+      <button class="btn btn-primary" id="btnDone">✓ Gata!</button>
+    </div>
+
+    <div style="margin-top:24px">
+      <div class="zone-grid" id="zoneGrid"></div>
+    </div>
+  </div>
+</main>
+
+<script src="./js/store.js"></script>
+<script src="./js/exercises.js"></script>
+<script src="./js/notifications.js"></script>
+<script src="./js/timer.js"></script>
+<script src="./js/app.js"></script>
+<script src="./js/session.js"></script>
+</body>
+</html>

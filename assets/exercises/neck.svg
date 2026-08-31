@@ -1,0 +1,30 @@
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" aria-label="Întoarce gâtul">
+  <defs>
+    <linearGradient id="neck-g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#3ddc97"/>
+      <stop offset="100%" stop-color="#22c1c3"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(120,120)">
+    <circle r="50" fill="none" stroke="#3ddc97" stroke-width="2" opacity="0.3" stroke-dasharray="4 4"/>
+    <g stroke="url(#neck-g)" stroke-width="3" fill="none" stroke-linecap="round">
+      <path d="M-60,-10 Q-50,-50 0,-60 Q50,-50 60,-10">
+        <animateTransform attributeName="transform" type="rotate" 
+          values="0;15;-15;0" dur="4s" repeatCount="indefinite"/>
+      </path>
+      <circle cx="0" cy="-15" r="18" fill="rgba(61,220,151,0.15)" stroke="#3ddc97">
+        <animateTransform attributeName="transform" type="rotate"
+          values="0;15;-15;0" dur="4s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="-6" cy="-18" r="2" fill="#3ddc97">
+        <animateTransform attributeName="transform" type="rotate"
+          values="0;15;-15;0" dur="4s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="6" cy="-18" r="2" fill="#3ddc97">
+        <animateTransform attributeName="transform" type="rotate"
+          values="0;15;-15;0" dur="4s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+    <text y="100" text-anchor="middle" fill="#8b94a8" font-size="14" font-family="sans-serif">stânga → dreapta</text>
+  </g>
+</svg>

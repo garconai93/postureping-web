@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Setup · PosturePing</title>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#3ddc97">
+<link rel="icon" type="image/png" sizes="32x32" href="./assets/icons/favicon-32.png">
+<link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
+<link rel="stylesheet" href="./css/app.css">
+</head>
+<body>
+<main class="onboard-wrap">
+  <div class="onboard">
+    <div class="progress"><div class="progress-bar" id="progress" style="width:0%"></div></div>
+    <div class="step-label" id="stepLabel">Pas 1 din 8</div>
+    <h2 class="question" id="question">Loading...</h2>
+    <div class="options" id="options"></div>
+    <div class="step-nav">
+      <button class="btn btn-ghost" id="btnBack">← Înapoi</button>
+      <button class="btn btn-primary" id="btnNext" disabled>Continuă →</button>
+    </div>
+  </div>
+</main>
+
+<script src="./js/store.js"></script>
+<script src="./js/exercises.js"></script>
+<script src="./js/app.js"></script>
+<script src="./js/onboarding.js"></script>
+</body>
+</html>
