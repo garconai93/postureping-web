@@ -467,6 +467,7 @@
 
     const body = buildBody();
     scene.add(body.root);
+    console.log('[Character3D] body built, scene children:', scene.children.length, 'body root children:', body.root.children.length);
 
     // Scale down slightly to fit frame nicely
     body.root.scale.set(1.15, 1.15, 1.15);
@@ -604,7 +605,13 @@
 
   function init(canvas) {
     if (active) return active;
-    const ctx = createScene(canvas);
+    let ctx;
+    try {
+      ctx = createScene(canvas);
+    } catch (e) {
+      console.error('[Character3D] createScene failed:', e);
+      throw e;
+    }
     let currentExercise = 'neck';
     let phaseData = { phase: '', color: 0x3ddc97 };
     let rafId = null;
