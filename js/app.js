@@ -1,5 +1,5 @@
 // Toast helper shared across pages
-const $ = id => document.getElementById(id);
+window.$ = id => document.getElementById(id);
 function toast(msg, duration = 3000) {
   const el = document.getElementById('toast');
   if (!el) return console.log('[toast]', msg);
