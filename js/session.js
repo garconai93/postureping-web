@@ -69,11 +69,11 @@ function startExerciseTimer(ex) {
       // Update phase text for breath
       if (ex.id === 'breath' && character3D) {
         const phase = character3D.getPhase();
-        if (phase && phaseTextEl) {
-          phaseTextEl.textContent = phase;
+        if (phase && phase.phase && phaseTextEl) {
+          phaseTextEl.textContent = phase.phase;
           phaseTextEl.style.opacity = '1';
-          phaseTextEl.style.color = phase === 'Inspiră' ? '#3ddc97' :
-                                     phase === 'Ține' ? '#ffd166' : '#22c1c3';
+          const c = phase.color;
+          phaseTextEl.style.color = '#' + c.toString(16).padStart(6, '0');
         }
       }
     },
