@@ -1,4 +1,4 @@
-const CACHE = 'postureping-v3';
+const CACHE = 'postureping-v4-disabled';
 const ASSETS = [
   './',
   './index.html',
@@ -26,27 +26,22 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));
+  // v4: skip caching, force network only
   self.skipWaiting();
 });
 
 self.addEventListener('activate', e => {
+  // delete ALL old caches to force fresh fetch
   e.waitUntil(caches.keys().then(keys =>
-    Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
+    Promise.all(keys.map(k => caches.delete(k)))
   ));
   self.clients.claim();
 });
 
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
+  // network-first only, no cache fallback
   e.respondWith(
-    caches.match(e.request).then(cached => {
-      const networkFetch = fetch(e.request).then(res => {
-        const copy = res.clone();
-        caches.open(CACHE).then(c => c.put(e.request, copy));
-        return res;
-      }).catch(() => cached);
-      return cached || networkFetch;
-    })
+    fetch(e.request).catch(() => caches.match(e.request))
   );
 });
